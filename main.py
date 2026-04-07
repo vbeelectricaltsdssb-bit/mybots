@@ -109,4 +109,4 @@ if __name__ == "__main__":
     while True:
         print("Checking...")
         check_updates()
-        time.sleep(600)   # every 10 minutes
+        time.sleep(28800)   # every 10 minutes
