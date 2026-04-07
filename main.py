@@ -56,14 +56,22 @@ def get_hssc():
 # ===== IGNOU =====
 def get_ignou():
     try:
-        r = requests.get(IGNOU_URL, timeout=10)
+        r = requests.get("http://rcdelhi2.ignou.ac.in/aboutus/4", timeout=10)
         soup = BeautifulSoup(r.text, "html.parser")
 
-        for a in soup.find_all("a"):
-            text = a.text.strip()
-            href = a.get("href")
+        # 🔍 Find notification section specifically
+        notifications_section = soup.find("div", string="Notifications")
 
-            if text and href and ("pdf" in href.lower() or "notice" in text.lower()):
+        # fallback: find all links under main content
+        content = soup.find_all("a")
+
+        for link in content:
+            text = link.text.strip()
+            href = link.get("href")
+
+            # ✅ filter only real notifications
+            if text.startswith("Notification"):
+
                 if not href.startswith("http"):
                     href = "http://rcdelhi2.ignou.ac.in" + href
 
@@ -71,9 +79,9 @@ def get_ignou():
 
         return None
 
-    except:
+    except Exception as e:
+        print("IGNOU error:", e)
         return None
-
 
 # ===== CHECK FUNCTION =====
 def check_updates():
